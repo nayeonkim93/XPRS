@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css"/>
+
+    <!-- Necessary includes for LocusZoom.js -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@^5.16.0" type="text/javascript"></script>
+    <script src="dist/locuszoom.app.min.js" type="text/javascript"></script>
+    <script type="application/javascript" src="dist/ext/lz-dynamic-urls.min.js"></script>
+
+    <link rel="stylesheet" href="dist/locuszoom.css" type="text/css"/>
+
+    <title>Individual level Result - XPRS</title>
+
+    <style>
+      body {
+        background-color: #FAFAFA;
+        margin: 0px 20px;
+      }
+      img {
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+      div.example > a > h6 {
+        margin-bottom: 0.5em;
+      }
+      div.example > a > img {
+        border: 1px solid #8A8A8A;
+        margin-bottom: 1.4em;
+      }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+
+      <h1 style="margin-top: 1em;"><strong>eXplainable PRS (XPRS)</strong></h1>
+
+      <h6 style="float: right;"><a href="/run_1/result">&lt; return to Population based</a></h6>
+     
+      <br>
+      <hr>
+
+      <h3><strong>Individual level</strong> </h3>
+
+      <div id="app1"></div>
+      <div id="app2"></div>
+
+      <script type="text/javascript">
+        fetch("/static/data/iid.txt")
+          .then((res) => res.text())
+          .then((text) => {
+              const app = document.getElementById('app1');
+              const header = document.createElement('h5');
+              const boldText = document.createElement('strong');
+              const headerContent = document.createTextNode("IID: ");
+              boldText.appendChild(headerContent);
+              header.appendChild(boldText);
+              header.appendChild(document.createTextNode(text));
+              app.appendChild(header);
+          }).catch((e) => console.error(e));
+
+        fetch("/static/data/prs.txt")
+          .then((res) => res.text())
+          .then((text) => {
+              const app = document.getElementById('app2');
+              const header = document.createElement('h5');
+              const boldText = document.createElement('strong');
+              const headerContent = document.createTextNode("PRS: ");
+              boldText.appendChild(headerContent);
+              header.appendChild(boldText);
+              header.appendChild(document.createTextNode(text));
+              app.appendChild(header);
+
+              // Update the PRS value in the explanation paragraph
+              const prsValueSpan = document.getElementById('prs-value');
+              prsValueSpan.textContent = text;
+          }).catch((e) => console.error(e));  
+      </script>
+
+      <h5 id="get_it"><Strong>Density Plot </Strong>  </h5>
+      <p>
+        The graph below shows the density of Polygenic Risk Scores (PRS) within the population. 
+        The red arrow indicates your PRS score. This score places you at this specific point within the population distribution.
+      </p>
+     
+      <img src="{{url_for('static', filename='/data/dist_indi.jpg')}}" alt="individual PRS distribution" width="300" height="300">
+
+      <h5 id="get_it"> <strong> Gene-based Manhattan Plot</strong>  </h5>
+      <p>
+        The Manhattan plot below shows the risk genes within the population. 
+        <span style="color: red;">Red</span> represents top 10 risk genes within the individual.
+        <span style="color: blue;">Blue</span> represents bottom 10 risk genes within the individual.
+       </p>
+      <iframe src="/static/data/individual_gene.html" onload='javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+"px";}(this));' style="height:200px;width:100%;border:none;overflow:hidden;"></iframe>
+
+
+      <h5 id="get_it"><Strong> Table </Strong>  </h5>
+
+      <p>
+        The table below lists the <span style="color: red;">top 10 risk genes</span>   within the individual.
+      </p>
+      <img src="{{url_for('static', filename='/data/individual_gene_top.png')}}" alt = "top 10 risk genes table">
+
+      <p>
+        The table below lists the <span style="color: blue;">bottom 10 non-risk genes</span>  within the individual.
+      </p>
+      <img src="{{url_for('static', filename='/data/individual_gene_bottom.png')}}" alt = "top 10 risk genes table">
+
+
+      <ul>
+        <strong>Chr:</strong> Chromosome number where the gene is located. 
+       <strong>Gene:</strong> Name of the gene  identified as risk genes.
+        <strong>Start:</strong> Starting position of the gene on the chromosome.
+        <strong>End:</strong> Ending position of the gene on the chromosome.
+        <strong>#_Snps:</strong> Number of SNPs (Single Nucleotide Polymorphisms) included in the analysis for the gene.
+        <strong>Attributed_Value:</strong> The value that identifies genes that elevate disease risk by comparing the gene's contribution score to the average contribution score in population.
+      </ul>
+
+      <h5 id="get_it"><strong> SNP-based Locuszoom-Like Plot</strong> </h5>
+     
+      <p>
+        The SNP-based Locuszoom-Like Plot below provides a detailed view of individual SNP contribution scores within the top 10 risk and bottom 10 non-risk genes. 
+        By clicking on any of the gene names in the list, you can see a specific plot illustrating the SNP contribution scores for that gene.
+      </p>
+
+      <h5 id="get_it"> TOP 10 risk genes</h5>
+
+      <iframe src="/static/top_10.html" onload='javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+"px";}(this));' style="height:200px;width:100%;border:none;overflow:hidden;"></iframe>
+
+      <h5 id="get_it"> BOTTOM 10 non-risk genes</h5>
+      <iframe src="/static/bottom_10.html" onload='javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+"px";}(this));' style="height:200px;width:100%;border:none;overflow:hidden;"></iframe>
+
+      <hr>
+
+      <div class="row">
+        <footer style="text-align: center;">
+          &copy; Copyright <script>document.write(new Date().getFullYear())</script> 
+          <a href="https://github.com/nayeonkim93">Graduate school of Data Science, Seoul National University</a><br>
+        </footer>
+      </div>
+
+    </div>
+</body>
+</html>

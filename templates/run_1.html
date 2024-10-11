@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css"/>
+
+    <!-- Necessary includes for LocusZoom.js -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@^5.16.0" type="text/javascript"></script>
+    <script src="dist/locuszoom.app.min.js" type="text/javascript"></script>
+    <script type="application/javascript" src="dist/ext/lz-dynamic-urls.min.js"></script>
+    <link rel="stylesheet" href="dist/locuszoom.css" type="text/css"/>
+
+    <title>Run - Case 1 - XPRS</title>
+
+    <style>
+      body {
+        background-color: #FAFAFA;
+        margin: 0;
+        font-family: 'Raleway', sans-serif;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      .container {
+        display: flex;
+        flex: 1;
+        flex-direction: row;
+      }
+      .navbar {
+        flex: 0 0 200px;
+        padding: 20px;
+        background-color: #fff;
+        border-right: 1px solid #e0e0e0;
+      }
+      .navbar ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      .navbar ul li {
+        margin-bottom: 10px;
+      }
+      .navbar ul li a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+      }
+      .navbar ul ul {
+        padding-left: 20px;
+        list-style-type: disc;
+      }
+      .content {
+        flex: 1;
+        padding: 20px;
+      }
+      footer {
+        text-align: center;
+        margin-top: 20px;
+      }
+      img {
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+      div.example > a > h6 {
+        margin-bottom: 0.5em;
+      }
+      div.example > a > img {
+        border: 1px solid #8A8A8A;
+        margin-bottom: 1.4em;
+      }
+      .box {
+        margin: 1em auto;
+        padding: 2em;
+        background: linear-gradient(-45deg, transparent 25%, #eee 25%, #eee 50%, transparent 50%, transparent 75%, #eee 75%, #eee);
+        background-size: 4px 4px;
+        border-bottom: 4px double #ddd;
+        border-top: 4px double #ddd;
+        background-clip: padding-box;
+      }
+      .box2 {
+        margin: 2em auto;
+        padding: 2em;
+        border-top: solid 5px #8B968D;
+        border-bottom: solid 5px #8B968D;
+        background-color: #F3F4F3;
+      }
+      .spinner {
+        border: 16px solid #eaeaea; /* Lighter gray for the spinner background */
+        border-top: 16px solid #808080; /* Darker gray for the spinning part */
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        animation: spin 2s linear infinite;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+      <div class="navbar">
+        <ul class="nav navbar-nav">
+          <li><a href="/">Home</a></li>
+          <li><a href="/tutorial">Tutorial</a></li>
+          <li><a href="/run">Run</a></li>
+          <ul>
+            <li><a href="/run_1">Case 1: you have cohort genotype file</a></li>
+            <li><a href="/run_already_done">Case 1-1: you have cohort genotype file & RDS file</a></li>
+            <li><a href="/run_2">Case 2: you have reference genotype file & individual genotype file</a></li>
+            <li><a href="/run_already_done_2">Case 2-1: you have reference genotype file, individual genotype file & RDS file</a></li>
+          </ul>
+          <li><a href="/run_1/result">Result</a></li>
+          <li><a href="/link">Links & Data</a></li>
+        </ul>
+      </div>
+      
+      <div class="content">
+        <h1 style="margin-top: 1em;"><strong>eXplainable PRS (XPRS)</strong></h1>
+        <h4 style="margin-top: 1em;">Case 1: you have cohort genotype file</h4>
+        <hr>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="box">
+          <ul class=flashes>
+            {% for message in messages %}
+                 <!-- <h5><center><li>{{ message }}</li> </center> </h5> <br> -->
+                 <h5><center><strong><i>{{ message }}</i></strong></center></h5>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <div class="box2">     
+          If you have already proceed running, you could go to 
+          <a href="/run_1/result">Result</a> directly and see the result.
+        </div>
+       
+        <h3 style="margin-top: 1em;"><strong>Inputs</strong></h3>
+        <h5><strong>Mandatory</strong></h5>
+        <p>*** If you do NOT have cohort.genotype.file, move to <a href="/run_2">case 2</a>. ***</p>
+        
+        <form method="post" action="" enctype="multipart/form-data" onsubmit="showSpinner();">
+          <div class="form-group">
+            <label for="test">cohort.genotype.file</label>
+            <input type="text" style="width: 700px; height: 40px;" name="test"
+                   placeholder="path to cohort.genotype.file" class="form-control"
+                   value="{{ request.form['test'] }}"></input>
+          </div>
+          <div class="form-group">
+            <label for="beta">PRS.scoring.file</label>
+            <input type="text" style="width: 700px; height: 40px;" name="beta"
+                   placeholder="path to PRS.scoring.file" class="form-control"
+                   value="{{ request.form['beta'] }}"></input>
+          </div>
+          <div class="form-group">
+            <label for="important_genes">GWAS.association.file</label>
+            <input type="text" style="width: 700px; height: 40px;" name="important_genes"
+                   placeholder="path to GWAS.association.file" class="form-control"
+                   value="{{ request.form['important_genes'] }}"></input>
+          </div>
+          <br>
+          <h5><strong>Optional</strong></h5>
+          <div class="form-group">
+            <label for="GWAS">sumstat.file</label>
+            <input type="text" style="width: 700px; height: 40px;" name="GWAS"
+                   placeholder="path to sumstat.file" class="form-control"
+                   value="{{ request.form['GWAS'] }}"></input>
+          </div>
+          <br>
+          <p>*** If the inputs you provided are not in rsid, you should provide your cS2G.file 
+            by converting the rsid to snpid using the original cS2G.file that is provided
+            in the software. Otherwise, please leave it blank. 
+            <a href="/data/cS2G_annotation.txt" download>Click here</a> to download the original cS2G.file. ***
+          </p>
+          <div class="form-group">
+            <label for="cS2G">cS2G.file</label>
+            <input type="text" style="width: 700px; height: 40px;" name="cS2G"
+                   placeholder="path to cS2G.file" class="form-control"
+                   value="{{ request.form['cS2G'] }}"></input>
+          </div>
+          <hr>
+          <h3 style="margin-top: 1em;"><strong>Parameters</strong></h3>
+          <h5><strong>Optional</strong></h5>
+          <div class="form-group">
+            <label for="window">window size</label>
+            <input type="text" name="window"
+                   placeholder="200000" class="form-control"
+                   value="{{ request.form['window'] }}"></input>
+          </div>
+          <div class="form-group">
+            <label for="cpu">number of CPU cores</label>
+            <input type="text" name="cpu"
+                   placeholder="8" class="form-control"
+                   value="{{ request.form['cpu'] }}"></input>
+          </div>
+          <div class="form-group">
+            <label for="cut">snp heritability top cut off</label>
+            <input type="text" name="cut"
+                   placeholder="0.5" class="form-control"
+                   value="{{ request.form['cut'] }}"></input>
+          </div>
+          <div id="progressContainer" style="display:none;">
+            <label for="progressBar">Processing:</label>
+            <progress id="progressBar" value="0" max="100" style="width:100%;"></progress>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">Run</button>
+          </div>
+        </form>
+        <hr>
+
+        <footer>
+          &copy; Copyright <script>document.write(new Date().getFullYear())</script> 
+          <a href="https://github.com/nayeonkim93">Graduate school of Data Science, Seoul National University</a><br>
+        </footer>
+      </div>
+
+
+
+    </div>
+
+    <div id="loader" style="display: none; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+      <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div class="spinner"></div>
+        <h2 style="color: white; margin-top: 20px;">Process is in progress...</h2>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          // Hide the spinner when the page loads
+          document.getElementById('loader').style.display = 'none';
+    
+          var form = document.querySelector('form');
+          form.onsubmit = function() {
+              // Display the spinner when the form is submitted
+              document.getElementById('loader').style.display = 'block';
+          };
+      });
+    
+      // Handle page load from cache when navigating back
+      window.onpageshow = function(event) {
+          document.getElementById('loader').style.display = 'none';
+      };
+    </script>
+</body>
+</html>

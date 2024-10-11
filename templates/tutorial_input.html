@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css"/>
+
+    <!-- Necessary includes for LocusZoom.js -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@^5.16.0" type="text/javascript"></script>
+    <script src="dist/locuszoom.app.min.js" type="text/javascript"></script>
+    <script type="application/javascript" src="dist/ext/lz-dynamic-urls.min.js"></script>
+    <link rel="stylesheet" href="dist/locuszoom.css" type="text/css"/>
+
+    <title>Input & Parameters - XPRS</title>
+
+    <style>
+      body {
+        background-color: #FAFAFA;
+        margin: 0;
+        font-family: 'Raleway', sans-serif;
+      }
+      .container {
+        display: flex;
+        flex-direction: row;
+      }
+      .navbar {
+        flex: 0 0 200px;
+        padding: 20px;
+        background-color: #fff;
+        border-right: 1px solid #e0e0e0;
+      }
+      .navbar ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      .navbar ul li {
+        margin-bottom: 10px;
+      }
+      .navbar ul li a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+      }
+      .navbar ul ul {
+        padding-left: 20px;
+        list-style-type: disc;
+      }
+      .content {
+        flex: 1;
+        padding: 20px;
+      }
+      footer {
+        text-align: center;
+        margin-top: 20px;
+      }
+      img {
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+      div.example > a > h6 {
+        margin-bottom: 0.5em;
+      }
+      div.example > a > img {
+        border: 1px solid #8A8A8A;
+        margin-bottom: 1.4em;
+      }
+      .box2 {
+        margin: 2em auto;
+        padding: 2em;
+        border-top: solid 5px #8B968D;
+        border-bottom: solid 5px #8B968D;
+        background-color: #F3F4F3;
+      }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+      <div class="navbar">
+        <ul class="nav navbar-nav">
+          <li><a href="/">Home</a></li>
+          <li><a href="/tutorial">Tutorial</a></li>
+          <ul>
+            <li><a href="/tutorial_input">Input & Parameters</a></li>
+            <li><a href="/tutorial_process">Processes</a></li>
+          </ul>
+          <li><a href="/run">Run</a></li>
+          <li><a href="/link">Links & Data</a></li>
+        </ul>
+      </div>
+      
+      <div class="content">
+        <h1 style="margin-top: 1em;"><strong>eXplainable PRS (XPRS)</strong></h1>
+        <hr>
+        <h3 style="margin-top: 1em;"><strong>Inputs</strong></h3>
+        <div class="box2">     
+          The snpid using for genotype.file, PRS.scoring.file and GWAS.association.file is recommended to be <strong>rsid</strong>. If not, you should provide your cS2G.file by converting the rsid to snpid, 
+          using the original cS2G.file that is provided in the platform.
+        </div>
+        <div class="box2">  
+          For PRS.scoring.file and GWAS.association.file, the A1 represents the alternative allele and A2 represents reference allele.
+        </div>
+
+        <h4><strong>Mandatory Inputs</strong></h4>
+        <div style="padding-left: 20px;">
+          <h5><strong>1. genotype.file</strong></h5>
+          <p>genotype.file is a mandatory input of the platform.
+            Interpretable PRS accept PLINK output format (bim, bed, fam) of test.file. 
+            The Full path and the prefix of the plink file for the target data set should be provided. <br>
+            <li>Correct : /home/folder_name/test_file_name</li>
+            <li>Wrong: /home/folder_name/test_file_name.bim</li>
+          </p>
+          <ol>
+            <strong><li>cohort.genotype.file</li></strong>
+            <p>If you have a cohort.genotype.file to observe risk genes within the cohort and you want to know each individual risk genes or risk SNPs, you 
+              can go to <a href="/run_1">case 1</a>.
+            </p>
+            <strong><li>reference.genotype.file & individual.genotype.file</li></strong>
+            <p>Suppose you do NOT have a cohort.genotype.file, then you can use <a href="https://www.internationalgenome.org/">1000G</a> or <a href="https://www.ukbiobank.ac.uk/">UKBB</a> as a reference.
+              You can use a reference.genotype file to observe risk genes within the cohort and add individual 
+              genotype.files to see individual risk genes and SNPs. To do so, go to <a href="/run_2">case 2</a>.
+            </p>
+          </ol>
+
+          <h5><strong>2. PRS.scoring.file</strong></h5>
+          <p>PRS.scoring.file is a mandatory input of the platform.
+            PRS.scoring.file is the file that is obtained from the PRS construction method, such as lassosum or PRS-CS. 
+            OR you can obtain from <a href="https://www.pgscatalog.org/">PRS catalog</a>.
+            The file must have the following header line.
+          </p>
+          <p>
+            <strong>chr</strong><br>
+            <strong>snpid</strong><br>
+            <strong>pos</strong><br>
+            <strong>A1</strong><br>
+            <strong>A2</strong><br>
+            <strong>beta</strong><br> 
+          </p>
+
+
+          <h5><strong>3. GWAS.association.file</strong></h5>
+          <p>GWAS.association.file is a mandatory input of the platform.
+            GWAS.association.file is the file that is obtained from <a href="https://www.ebi.ac.uk/gwas/">GWAS catalog</a>.
+            The file must have the following header line.
+          </p>
+          <p>
+            <strong>MAPPED_GENE</strong><br>
+            <strong>P_VALUE</strong><br>
+          </p>
+       
+        </div>
+
+        <h4><strong>Optional Inputs</strong></h4>
+        <div style="padding-left: 20px;">
+          <h5><strong>4. sumstat.file</strong></h5>
+          <p>sumstat.file is an optional input of the platform.
+            sumstat.file is the GWAS summary statistics used to construct the PRS.scoring.file. 
+            If you have used the PRS construction method to construct the PRS.scoringfile,
+            please provide the GWAS.file that you have used to construct the PRS. 
+            The file must have the following header line.
+          </p>
+          <p>
+          <strong>CHR</strong><br>
+          <strong>SNPID</strong><br>
+          <strong>POS</strong><br>
+          <strong>A1</strong><br>
+          <strong>A2</strong><br>
+          <strong>P.VALUE</strong><br>
+        </p>
+          <h5><strong>5. annnotation.file</strong></h5>
+          <p>annotation.file is a given input of the platform.
+            annotation.file is obtained from <a href="https://genome.ucsc.edu/">UCSC genome browser</a>. 
+            This file is used for positional mapping in the platform. 
+            Suppose you want to use your annotation.file, you could.
+            The file must have the following header line.
+          </p>
+          <p>
+          <strong>chr</strong><br>
+          <strong>symbol</strong><br>
+          <strong>start</strong><br>
+          <strong>end</strong><br>
+        </p>
+
+          <h5><strong>6. cS2G.file</strong></h5>
+          <p>cS2G.file is a given input of the platform.
+            This file is obtained from the paper <a href="https://www.nature.com/articles/s41588-022-01087-y">Combining SNP-to-gene linking strategies to identify disease genes and assess disease omnigenicity</a>. 
+            This is used for cS2G mapping in the platform. 
+            If your input files are not in rsid, you <strong>MUST</strong> modify your cS2G.file and upload it for usage. 
+            The file must have the following header line.
+          </p>
+          <p>
+          <strong>SNP</strong><br>
+          <strong>GENE</strong><br>
+          <strong>cS2G</strong><br>
+          <strong>INFO</strong><br>
+          <strong>annotation</strong><br>
+        </p>
+        </div>
+
+        <hr>
+
+        <h3 style="margin-top: 1em;"><strong>Parameters</strong></h1>
+        <div style="padding-left: 20px;">
+          <h5><strong>1. Window size</strong></h5>
+          <p>Window size is one of the parameters of the platform.
+            <li>Default window size: 200kb</li>
+          </p>
+
+          <h5><strong>2. Number of CPU cores</strong></h5>
+          <p>Number of CPU cores is one of the parameters of the platform.
+            Depending on your server specification, you could choose the number of CPU cores.  
+            <li>Default number of CPU cores: 8</li>
+          </p>
+
+          <h5><strong>3. SNP heritability top cut off</strong></h5>
+          <p>SNP heritability top cut off is one of the parameters of the platform.
+            If the PRS.scoring.file contains over 100,000 SNPs, 
+            we will default to use only the top 50% of SNPs based on their heritability, 
+            in order to streamline the process and focus on the most heritable SNPs.
+            If the SNPs in PRS.scoring.file do not exceed 100,000 SNP, we will use all the SNP in our
+            analysis.
+            <li>Default SNP Heritability top cut off: 0.5</li>
+          </p>
+        </div>
+
+        <hr>
+        <footer>
+          &copy; Copyright <script>document.write(new Date().getFullYear())</script> 
+          <a href="https://github.com/nayeonkim93">Graduate school of Data Science, Seoul National University</a><br>
+        </footer>
+      </div>
+    </div>
+</body>
+</html>

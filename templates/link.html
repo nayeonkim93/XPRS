@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css"/>
+    
+    <!-- Necessary includes for LocusZoom.js -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@^5.16.0" type="text/javascript"></script>
+    <script src="/dist/locuszoom.app.min.js" type="text/javascript"></script>
+    <script type="application/javascript" src="/dist/ext/lz-dynamic-urls.min.js"></script>
+
+    <title>Links & Data - XPRS</title>
+
+    <style>
+      body {
+        background-color: #FAFAFA;
+        margin: 0;
+        font-family: 'Raleway', sans-serif;
+      }
+      .container {
+        display: flex;
+        flex-direction: row;
+      }
+      .navbar {
+        flex: 0 0 200px;
+        padding: 20px;
+        background-color: #fff;
+        border-right: 1px solid #e0e0e0;
+      }
+      .navbar ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      .navbar ul li {
+        margin-bottom: 10px;
+      }
+      .navbar ul li a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+      }
+      .content {
+        flex: 1;
+        padding: 20px;
+      }
+      footer {
+        text-align: center;
+        margin-top: 20px;
+      }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+      <div class="navbar">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="/">Home</a></li>
+          <li><a href="/tutorial">Tutorial</a></li>
+          <li><a href="/run">Run</a></li>
+          <li><a href="/link">Links & Data</a></li>
+        </ul>
+      </div>
+      
+      <div class="content">
+        <h1 style="margin-top: 1em;"><strong>eXplainable PRS (XPRS)</strong></h1>
+        <hr>
+        <h3><strong>Links</strong></h3>
+        <p>GWAS Catalog
+          <a href="https://www.ebi.ac.uk/gwas/"> click here</a>
+        </p>
+        <p>PRS Catalog
+          <a href="https://www.pgscatalog.org/">click here</a>
+        </p>
+        
+        <p>Original annotation.file was download from the
+          <a href="https://genome.ucsc.edu/">UCSC genome browser </a>. 
+        </p>
+      
+        <p>Original cS2G.file was downloaded from 
+          <a href="https://zenodo.org/records/6415925">Combining SNP-to-gene linking strategies to identify disease genes and assess disease omnigenicity</a>.
+        </p>
+
+        <h3><strong>Data</strong></h3>
+        <p>Curated annotation.file can be download from clicking 
+          <a href="/data/ucsc_hg38.txt" download> here</a> 
+        </p>
+
+        <p>Curated cS2G.file can be download from clicking 
+        <a href="/data/cS2G_annotation.txt" download> here</a> 
+      </p>
+
+        <hr>
+        <footer>
+          &copy; Copyright <script>document.write(new Date().getFullYear())</script> 
+          <a href="https://github.com/nayeonkim93">Graduate school of Data Science, Seoul National University</a><br>
+        </footer>
+      </div>
+    </div>
+</body>
+</html>

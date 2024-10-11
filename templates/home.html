@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css"/>
+    
+    <!-- Necessary includes for LocusZoom.js -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@^5.16.0" type="text/javascript"></script>
+    <script src="/dist/locuszoom.app.min.js" type="text/javascript"></script>
+    <script type="application/javascript" src="/dist/ext/lz-dynamic-urls.min.js"></script>
+
+    <title>Home - XPRS</title>
+
+    <style>
+      body {
+        background-color: #FAFAFA;
+        margin: 0;
+        font-family: 'Raleway', sans-serif;
+      }
+      .container {
+        display: flex;
+        flex-direction: row;
+      }
+      .navbar {
+        flex: 0 0 200px;
+        padding: 20px;
+        background-color: #fff;
+        border-right: 1px solid #e0e0e0;
+      }
+      .navbar ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      .navbar ul li {
+        margin-bottom: 10px;
+      }
+      .navbar ul li a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+      }
+      .content {
+        flex: 1;
+        padding: 20px;
+      }
+      footer {
+        text-align: center;
+        margin-top: 20px;
+      }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+      <div class="navbar">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="/">Home</a></li>
+          <li><a href="/tutorial">Tutorial</a></li>
+          <li><a href="/run">Run</a></li>
+          <li><a href="/link">Links & Data</a></li>
+        </ul>
+      </div>
+      
+      <div class="content">
+        <h1 style="margin-top: 1em;"><strong>eXplainable PRS (XPRS)</strong></h1>
+        <hr>
+        <h3><strong>Summary</strong></h3>
+        <p>Polygenic Risk Scores (PRS) have emerged as crucial methods for assessing genetic susceptibility to various diseases. 
+            Despite their potential, the clinical utility of PRS can be limited by the lack of tools that help to explain PRS. 
+            To address these issues, we introduce eXplainable PRS (XPRS), a software designed to enhance the interpretability of PRS by decomposing them into gene/region and SNP contribution scores. 
+            By utilizing Shapley Additive Explanations (SHAP), XPRS calculates the attributed score of each gene or region, providing detailed insights into which genes significantly contribute to an individual’s PRS. 
+            This decomposition allows for a more granular explanation, enabling the examination of specific SNPs within genes to determine their individual impact on PRS.
+        </p>
+        <p>XPRS is composed of a multilevel visualization approach. 
+            At the population level, Manhattan plots and tables highlight important genes of PRS based on the highest variance in gene contribution scores. 
+            At the individual level, XPRS visualizes attributed gene values to pinpoint risk genes that drive the PRS value of the given individual and employs LocusZoom plots to show which SNPs influence those genes.
+        </p>
+        <p>The software is implemented with a user-friendly web interface, allowing easy data input. 
+            Core computations are optimized with C++, and R is used for visualization and data preprocessing, leveraging its robust statistical and graphical capabilities. 
+            This integrated approach ensures that XPRS is both accessible and efficient in handling complex computational tasks.
+        </p>
+        <p>In conclusion, XPRS can bridge the gap between complex genetic data and actionable clinical insights. 
+            Its ability to provide detailed, interpretable genetic risk assessments can pave the way for more precise and personalized healthcare interventions.
+        </p>
+        
+        <hr>
+        <footer>
+          &copy; Copyright <script>document.write(new Date().getFullYear())</script> 
+          <a href="https://github.com/nayeonkim93">Graduate school of Data Science, Seoul National University</a><br>
+        </footer>
+      </div>
+    </div>
+</body>
+</html>
