@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css"/>
+
+  <!-- Necessary includes for LocusZoom.js -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@^5.16.0" type="text/javascript"></script>
+  <script src="/static/dist/locuszoom.app.min.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="/static/dist/locuszoom.css" type="text/css"/>
+
+  <script type="application/javascript" src="/static/dist/ext/lz-dynamic-urls.min.js"></script>
+
+  <style>
+    body {
+      background-color: #FAFAFA;
+      margin: 0 20px;
+    }
+
+    img {
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    ul.top_hits li {
+      margin-bottom: 0;
+    }
+  </style>
+
+</head>
+
+<body>
+
+
+  <div class="row">
+    <div class="two columns">
+      <ul class="top_hits" style="padding-left: 0.2rem; min-width: 110px;"></ul>
+    </div>
+    <div class="ten columns">
+      <div id="lz-plot" class="lz-container-responsive"></div>
+    </div>
+  </div>
+
+
+  <script type="application/javascript">
+    // Initialize a variable to hold the window size with a default value
+    let windowSize = 1000000; // Default window size if fetch fails
+
+    // Fetch the window size from window_size.txt
+    fetch("/static/data/window_size.txt")
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.text();
+      })
+      .then(text => {
+        const parsedSize = parseInt(text.trim(), 10);
+        if (!isNaN(parsedSize) && parsedSize > 0) {
+          windowSize = parsedSize;
+          console.log("Window size set to:", windowSize);
+        } else {
+          console.warn("Invalid window size in window_size.txt. Using default:", windowSize);
+        }
+      })
+      .catch(error => {
+        console.error("Failed to fetch window_size.txt. Using default window size.", error);
+      });
+
+    var apiBase = "https://portaldev.sph.umich.edu/api/v1/";
+
+    var data_sources = new LocusZoom.DataSources()
+        .add("assoc", ['AssociationLZ', { url: '/static/data/snp_level_manhattan_plot.json', params: {source: null}}])
+        .add('ld', ['LDServer', { url: 'https://portaldev.sph.umich.edu/ld/', source: '1000G', population: 'ALL', build: 'GRCh37' }])
+        .add('recomb', ['RecombLZ', { url: apiBase + 'annotation/recomb/results/', build: 'GRCh37' }])
+        .add('gene', ['GeneLZ', { url: apiBase + 'annotation/genes/', build: 'GRCh37' }]) 
+        .add('constraint', ['GeneConstraintLZ', { url: 'https://gnomad.broadinstitute.org/api/', build: 'GRCh37' }]);
+
+    // Get the standard association plot layout from LocusZoom's built-in layouts
+    var stateUrlMapping = { chr: "chrom", start: "start", end: "end", ldrefvar: 'ld_variant' };
+    // Fetch initial position from the URL, or use some defaults
+    var initialState = LzDynamicUrls.paramsFromUrl(stateUrlMapping);
+    if (!Object.keys(initialState).length) {
+        // initialState = { chr: 11, start: 20041792, end: 21729100};
+        initialState = { chr: 1, start: 153640167, end: 153681180}; 
+    }
+
+    // Define the layout
+    layout = LocusZoom.Layouts.get('plot', 'standard_association', { state: initialState });
+      
+    var plot = LocusZoom.populate('#lz-plot', data_sources, layout);
+
+    LzDynamicUrls.plotUpdatesUrl(plot, stateUrlMapping);
+    LzDynamicUrls.plotWatchesUrl(plot, stateUrlMapping);
+
+    /**
+     * Function to jump to a specific genomic region.
+     * It uses the dynamically fetched window size to adjust the view.
+     * @param {string} region - The genomic region in the format "chr:start:end"
+     * @returns {boolean} - Always returns false to prevent default behavior
+     */
+    function jumpTo(region) {
+      var target = region.split(":");
+      if (target.length !== 3) {
+        console.error("Invalid region format. Expected 'chr:start:end'.");
+        return false;
+      }
+
+      var chr = target[0];
+      var pos_start = target[1];
+      var pos_end = target[2];
+      var start = 0;
+      var end = 0;
+
+      // Validate positions to ensure they don't contain unexpected characters
+      if (!pos_start.match(/[-+]/) && !pos_end.match(/[-+]/)) {
+          start = Math.max(+pos_start - windowSize, 0); // Ensure start is not negative
+          end = +pos_end + windowSize;
+      } else {
+          console.warn("Positions contain invalid characters. Using exact positions without window size.");
+          start = +pos_start;
+          end = +pos_end;
+      }
+
+      plot.applyState({chr: chr, start: start, end: end, ldrefvar: ""});
+      return false;
+    }
+
+    // Fetch and populate the top hits list
+    fetch("/static/data/bottom10.txt")
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return res.text();
+      })
+      .then((text) => {
+        const lines = text.trim().split("\n"); // Trim to remove whitespace and newline characters from both ends of the string
+        var top_hits = lines.map(x => x.split(" "));  // Assuming each line has two space-separated values: name and region
+        console.log(top_hits);
+        top_hits.forEach(function (hit) {
+          if (hit.length >= 2) { // Ensure there are enough elements
+            d3.select("ul.top_hits").append("li")
+              .html("<a href=\"javascript:void(0);\" onclick=\"javascript:jumpTo('" + hit[1] + "');\">" + hit[0] + "</a>");
+          } else {
+            console.warn("Invalid hit format:", hit);
+          }
+        });
+      })
+      .catch((e) => console.error("Failed to fetch bottom10.txt:", e));
+
+  </script> 
+
+</body>
+</html>
