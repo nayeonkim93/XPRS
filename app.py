@@ -6,9 +6,23 @@ import atexit
 from flask import Flask, render_template, request, url_for, flash, redirect, Response
 from werkzeug.exceptions import abort
 import pyRserve
+import gzip
+import shutil
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
+
+# Path to the gzipped file
+gzipped_file_path = './data/cS2G_annotation.txt.gz'
+output_file_path = './data/cS2G_annotation.txt'
+
+# Check if the gzipped file exists and the unzipped file does not
+if os.path.exists(gzipped_file_path) and not os.path.exists(output_file_path):
+    with gzip.open(gzipped_file_path, 'rb') as f_in:
+        with open(output_file_path, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
+    print(f'Unzipped {gzipped_file_path} to {output_file_path}')
+
 
 # Function to check if Rserve is running
 def is_rserve_running():
