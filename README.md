@@ -22,3 +22,21 @@ source("install_packages.R")
 ``` 
 
 # Getting Started
+
+### 1. Clone the Repository:
+XPRS leverages PLINK for certain analyses. The PLINK executable is included in the repository. Before running PLINK, you need to grant execute permissions:
+``` 
+git clone https://github.com/nayeonkim93/XPRS.git
+cd XPRS
+ ```
+
+### 2. Set Up Dependencies:
+Follow the steps outlined in the Dependencies section above to install all necessary software and libraries.
+
+### 3. Run XPRS
+``` 
+export FLASK_APP=app
+export FLASK_ENV=development
+export FLASK_DEBUG=1
+flask run -p 5000
+ ```
