@@ -8,9 +8,13 @@ from werkzeug.exceptions import abort
 import pyRserve
 import gzip
 import shutil
+from flask_cors import CORS
+
 
 app = Flask(__name__)
+# app = Flask(__name__, static_url_path='/static', static_folder='static')
 app.config['SECRET_KEY'] = 'your secret key'
+CORS(app)
 
 # Path to the gzipped file
 gzipped_file_path = './data/cS2G_annotation.txt.gz'
@@ -142,6 +146,16 @@ def get_test_file_path():
         test = './data/new_test'
     return test
 
+def read_iids_from_fam(fam_file_path):
+    """Reads the second column (IID) from the .fam file."""
+    iids = []
+    if os.path.exists(fam_file_path):
+        with open(fam_file_path, 'r') as fam_file:
+            for line in fam_file:
+                cols = line.split()
+                if len(cols) > 1:  # Ensure there are enough columns
+                    iids.append(cols[1])  # Append the second column (IID)
+    return iids
 
 def delete_all_files():
     # Define folders and file patterns to delete
@@ -361,54 +375,104 @@ def run_already_done():
 
     return render_template('run_already_done.html')
 
-@app.route('/run_1/result', methods=('GET', 'POST'))
-def result():
-    if request.method == 'POST':
-        test = get_test_file_path()
-        iid = request.form['iid']
+# @app.route('/run_1/result', methods=('GET', 'POST'))
+# def result():
+#     if request.method == 'POST':
+#         test = get_test_file_path()
+#         iid = request.form['iid']
 
-        if not test:
-            flash('test.file is required!')
-        if not iid:
-            flash('IID is required!')
+#         if not test:
+#             flash('test.file is required!')
+#         if not iid:
+#             flash('IID is required!')
         
-        else:
-            # Pass the arguments to R and run the analysis
-            conn.r.test_file = test
-            conn.r.iid = iid
+#         else:
+#             # Pass the arguments to R and run the analysis
+#             conn.r.test_file = test
+#             conn.r.iid = iid
    
-            time_taken = conn.eval(f'''
-                sink(file = './static/data/debug/run1_result.txt')
+#             time_taken = conn.eval(f'''
+#                 sink(file = './static/data/debug/run1_result.txt')
     
 
-                # Check if any of the key data objects do not exist or are NULL
+#                 # Check if any of the key data objects do not exist or are NULL
+#                 if (!exists("annotated_info", envir = .GlobalEnv) || is.null(annotated_info) ||
+#                     !exists("important_genes", envir = .GlobalEnv) || is.null(important_genes) ||
+#                     !exists("snp", envir = .GlobalEnv) || is.null(snp) ||
+#                     !exists("full_PRS", envir = .GlobalEnv) || is.null(full_PRS) ||
+#                     !exists("PRS_info", envir = .GlobalEnv) || is.null(PRS_info)) {{
+
+#                     print("Here - loading data")
+#                     load_data_if_exists("./output/data.RDS")
+#                 }}
+
+
+#                 start_time <- Sys.time()
+        
+#                 print(test_file)
+#                 print(iid)
+
+#                 which_symbol_is_important_individual(iid, test_file, snp, full_PRS, PRS_info, annotated_info, important_genes,'./static/data/snp_level_manhattan_plot.json')
+#                 end_time <- Sys.time()
+#                 print(paste0("Time it takes for which_symbol_is_important_individual function is ", end_time - start_time, " seconds"))
+#                 sink()
+#             ''')
+       
+            
+            
+#             return redirect(url_for("result_individual"))
+                
+#     return render_template('result.html')
+
+@app.route('/run_1/result', methods=('GET', 'POST'))
+def result():
+    test = get_test_file_path()
+
+    if not test:
+        flash('test_file is required!')
+        return render_template('result.html', suggestions=[], iid_value='')
+
+    # Build the full path to the .fam file by appending ".fam"
+    fam_file_path = os.path.join(test + '.fam')
+    
+    # Read IIDs from the .fam file
+    suggestions = read_iids_from_fam(fam_file_path)
+
+    if request.method == 'POST':
+        iid = request.form['iid']
+
+        if not iid:
+            flash('IID is required!')
+        else:
+            # Pass the arguments to R and run the analysis (keeping your R integration logic)
+            conn.r.test_file = test
+            conn.r.iid = iid
+
+            time_taken = conn.eval(f'''
+                sink(file = './static/data/debug/run1_result.txt')
                 if (!exists("annotated_info", envir = .GlobalEnv) || is.null(annotated_info) ||
                     !exists("important_genes", envir = .GlobalEnv) || is.null(important_genes) ||
                     !exists("snp", envir = .GlobalEnv) || is.null(snp) ||
                     !exists("full_PRS", envir = .GlobalEnv) || is.null(full_PRS) ||
                     !exists("PRS_info", envir = .GlobalEnv) || is.null(PRS_info)) {{
-
                     print("Here - loading data")
                     load_data_if_exists("./output/data.RDS")
                 }}
 
-
                 start_time <- Sys.time()
-        
                 print(test_file)
                 print(iid)
 
-                which_symbol_is_important_individual(iid, test_file, snp, full_PRS, PRS_info, annotated_info, important_genes,'./static/data/snp_level_manhattan_plot.json')
+                which_symbol_is_important_individual(iid, test_file, snp, full_PRS, PRS_info, annotated_info, important_genes, './static/data/snp_level_manhattan_plot.json')
                 end_time <- Sys.time()
                 print(paste0("Time it takes for which_symbol_is_important_individual function is ", end_time - start_time, " seconds"))
                 sink()
             ''')
-       
-            
-            
+
             return redirect(url_for("result_individual"))
-                
-    return render_template('result.html')
+    
+    # Pass suggestions (IIDs) to the template for autocomplete
+    return render_template('result.html', suggestions=suggestions, iid_value='')
 
 
 @app.route('/run_2', methods=('GET', 'POST'))
@@ -793,5 +857,7 @@ def delete_files():
 # Register the delete_all_files function to be called on exit
 atexit.register(delete_all_files)
 
-if __name__=='__main__':
-    app.run(debug=True, port=5000)
+if __name__ == '__main__':
+    app.run(host=True, port=5000)
+
+ #pp.run(host='0.0.0.0', port=8785)
