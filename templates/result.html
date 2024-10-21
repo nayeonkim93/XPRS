@@ -128,14 +128,18 @@
        <form method="post" onsubmit="showSpinner();">
         <h4><Strong>Individual level</Strong></h4>
 
-        <div class="form-group">
-            <label for="iid">IID<label>
-            <input type="text" name="iid"
-                   placeholder="Enter the IID" class="form-control"
-                   value="{{ request.form['iid'] }}"></input>
-         </div>
-        
 
+         <div class="form-group">
+          <label for="iid">IID</label>
+          <input type="text" name="iid"
+                 placeholder="Enter the IID" class="form-control"
+                 list="iid-list" value="{{ iid_value }}">
+          <datalist id="iid-list">
+              {% for suggestion in suggestions %}
+                  <option value="{{ suggestion }}">
+              {% endfor %}
+          </datalist>
+       </div>
          
         
         <div class="form-group">
