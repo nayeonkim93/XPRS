@@ -25,10 +25,6 @@ To use XPRS, you must run it locally and specify the direct paths to your data f
 
 To run XPRS locally:
 
-1. Follow the the step below to set up XPRS on your server.
-
-# Getting Started
-
 ### 1. Clone the Repository:
 XPRS leverages PLINK for certain analyses. The PLINK executable is included in the repository. Before running PLINK, you need to grant execute permissions:
 ``` 
@@ -57,7 +53,7 @@ export FLASK_DEBUG=1
 flask run -p 5000
  ```
 
-2. When running XPRS, make sure to specify the **local paths** to your files. 
+### 5. When running XPRS, make sure to specify the **local paths** to your files. 
 
 For example:
 
