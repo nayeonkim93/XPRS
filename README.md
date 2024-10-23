@@ -1,7 +1,31 @@
 # XPRS
-
 eXplainable PRS (XPRS) is a software designed to enhance the interpretability of PRS by decomposing them into gene/region and SNP contribution scores. 
 By utilizing Shapley Additive Explanations (SHAP), XPRS calculates the attributed value of each gene or region, providing detailed insights into which genes significantly contribute to an individual’s PRS.
+
+## Access the XPRS Web Service
+
+You can explore XPRS via our cloud-based web service:  
+[https://xprs.leelabsg.org](https://xprs.leelabsg.org)
+
+### How to View Preprocessed Data:
+
+To view the preprocessed data, follow these steps:
+
+1. **Navigate to the `Run` section** and select **Case 1-1**.
+2. **Enter the following paths** in the respective fields:
+   - **Cohort.genotype.file**: `./data/sample`
+   - **RDS.file**: `./output/sample.RDS`
+3. **Submit the form** to view the results.
+
+For **data security reasons**, you cannot upload data directly through the web interface. Therefore you must run XPRS locally. 
+
+## Running XPRS Locally
+
+To use XPRS, you must run it locally and specify the direct paths to your data files on your machine. 
+
+To run XPRS locally:
+
+1. Follow the the step below to set up XPRS on your server.
 
 # Getting Started
 
@@ -32,3 +56,11 @@ export FLASK_ENV=development
 export FLASK_DEBUG=1
 flask run -p 5000
  ```
+
+2. When running XPRS, make sure to specify the **local paths** to your files. 
+
+For example:
+
+```
+file: /path/to/your/data/sample
+```
