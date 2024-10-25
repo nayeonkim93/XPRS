@@ -3,7 +3,7 @@ eXplainable PRS (XPRS) is a software designed to enhance the interpretability of
 By utilizing Shapley Additive Explanations (SHAP), XPRS calculates the attributed value of each gene or region, providing detailed insights into which genes significantly contribute to an individual’s PRS. 
 For more information, see our manuscript 
 
-XPRS: A Tool for Interpretable and Explainable Polygenic Risk Score [doi: https://doi.org/10.1101/2024.10.24.24316050](https://www.medrxiv.org/content/10.1101/2024.10.24.24316050v1)
+XPRS: A Tool for Interpretable and Explainable Polygenic Risk Score [ doi: https://doi.org/10.1101/2024.10.24.24316050](https://www.medrxiv.org/content/10.1101/2024.10.24.24316050v1)
 
 ## Access the XPRS Web Service
 
