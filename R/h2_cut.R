@@ -64,7 +64,7 @@ h2_cal_cut <- function(test.file, beta.file, cut_off){
     final_dt$h2 <- (final_dt$beta)^2*(final_dt$MAF)*(1-final_dt$MAF)
 
     if (nrow(final_dt) > 100000){
-        final_dt <- final_dt[order(-snp$h2),]
+        final_dt <- final_dt[order(-final_dt$h2),]
         number <- floor(cut_off* nrow(snp))
         number <- max(number, 100000) 
         final_dt <- final_dt[c(1:number),]
