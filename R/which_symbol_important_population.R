@@ -229,7 +229,7 @@ p <- ggplot() +
   scale_x_continuous(label = axisdf$chr, breaks = axisdf$center) +
   # Adjust Y axis limits
   scale_y_continuous(expand = c(0, 0)) +
-  ylim(min(df_manhattan$variance) - 0.00001, max(df_manhattan$variance) + 0.0001) +
+  ylim(min(df_manhattan$variance) - 0.00000003, max(df_manhattan$variance) + 0.00000003) +
   # Apply theme settings
   theme_bw() +
   theme(
@@ -238,7 +238,7 @@ p <- ggplot() +
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank()
   ) +
-  xlab("Chr") + ylab("Variance of Gene Contribution Score")
+  xlab("Chromosome") + ylab("Variance of Gene Contribution Score")
 
 # Convert to plotly with custom tooltip for each point
 fig <- ggplotly(p, tooltip = "text")
