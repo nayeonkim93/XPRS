@@ -229,6 +229,16 @@ def run_1():
         if test and beta: 
             # with open('./output/test_file.txt', 'w') as f:
             #     f.write(test)
+            # Remove R objects
+            conn.eval('''
+                        existing_objects <- ls()
+                        to_remove <- c("annotated_info", "important_genes", "snp", "full_PRS", "PRS_info")
+                        rm(list = intersect(to_remove, existing_objects))
+                        ''')
+             # Check if file exists before deleting
+            file_path = './static/data/test_file.txt'
+            if os.path.exists(file_path):
+                os.remove(file_path)
             if not GWAS: 
                 if not cut:  
                     if not cS2G:
@@ -500,7 +510,16 @@ def run_2():
             flash('important_genes.file is required!')
         
         if test and beta: 
-      
+            # Remove R objects
+            conn.eval('''
+                        existing_objects <- ls()
+                        to_remove <- c("annotated_info", "important_genes", "snp", "full_PRS", "PRS_info")
+                        rm(list = intersect(to_remove, existing_objects))
+                        ''')
+             # Check if file exists before deleting
+            file_path = './static/data/test_file.txt'
+            if os.path.exists(file_path):
+                os.remove(file_path)
             if not GWAS: 
                 if not cut:  
                     if not cS2G:
@@ -603,7 +622,9 @@ def run_already_done_2():
                 
         if test and rds:
             # Pass the test and rds file paths to R and run the processing script
-
+            test_file_path = './static/data/test_file.txt'
+            with open(test_file_path, 'w') as f:
+                f.write(test)
       
             try:
                 conn.r.test_file = test
