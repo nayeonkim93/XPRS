@@ -61,7 +61,7 @@ gene_manhattan_plot <- function(person, full_PRS, PRS_info, annotated_info, impo
     scale_color_manual(values = rep(c("grey", "skyblue"), 22)) +
     scale_x_continuous(label = axisdf$chr, breaks = axisdf$center) +
     scale_y_continuous(expand = c(0, 0)) +
-    ylim(min(df_manhattan$attributed_value) - 0.003, max(df_manhattan$attributed_value) +0.003) +
+    ylim(min(df_manhattan$attributed_value) - 0.0003, max(df_manhattan$attributed_value) +0.0003) +
     theme_bw() +
     theme(
       legend.position = "none",
@@ -69,7 +69,7 @@ gene_manhattan_plot <- function(person, full_PRS, PRS_info, annotated_info, impo
       panel.grid.major.x = element_blank(),
       panel.grid.minor.x = element_blank()
     ) +
-    xlab("Chr") + ylab("Attributed Value of Gene")
+    xlab("Chromosome") + ylab("Attributed Value of Gene")
 
   # Convert to plotly with custom tooltip for each type
   fig <- ggplotly(p, tooltip = "text")
