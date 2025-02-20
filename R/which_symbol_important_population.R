@@ -79,30 +79,55 @@ which_gene_is_important_population_table <- function(annotated_info, important_g
   names(df) <- c("Chr", "Genes", "Start", "End", "#_Snps", "Gene_Variance")
 
 
+# for (i in 1:nrow(df)) {
+#   # Filter genes from df that are in important_genes
+#   matched_genes <- df$Genes[[i]][df$Genes[[i]] %in% important_genes$MAPPED_GENE]
+
+#   if (length(df$Genes[[i]]) > 3) {
+    
+#     if (length(matched_genes) > 0) {
+#       # Get the p-values for the matched genes and sort by P_VALUE
+#       gene_pvals <- important_genes[important_genes$MAPPED_GENE %in% matched_genes, ]
+#       sorted_genes <- gene_pvals[order(gene_pvals$P_VALUE), "MAPPED_GENE"]
+      
+#       # Convert sorted_genes to a vector of gene names
+#       sorted_genes <- sorted_genes$MAPPED_GENE
+
+#       # Keep only the top 3 genes with the lowest p-values
+#       df$Genes[[i]] <- sorted_genes[1:min(3, length(sorted_genes))]
+      
+#     } else {
+#       # If no genes are in important_genes, keep the first 3 genes from df
+#       df$Genes[[i]] <- df$Genes[[i]][1:3]
+#     }
+    
+#   }
+# }
+
 for (i in 1:nrow(df)) {
-  # Filter genes from df that are in important_genes
+  
+  # Remove NA values from the gene list first
+  df$Genes[[i]] <- df$Genes[[i]][!is.na(df$Genes[[i]])]
+  
+  # Identify genes in df that also appear in 'important_genes'
   matched_genes <- df$Genes[[i]][df$Genes[[i]] %in% important_genes$MAPPED_GENE]
-
-  if (length(df$Genes[[i]]) > 3) {
+  
+  if (length(matched_genes) == 0) {
+    # No matched genes: keep up to the first 3 (in case df$Genes[[i]] is also <3 in length)
+    df$Genes[[i]] <- df$Genes[[i]][1:min(3, length(df$Genes[[i]]))]
     
-    if (length(matched_genes) > 0) {
-      # Get the p-values for the matched genes and sort by P_VALUE
-      gene_pvals <- important_genes[important_genes$MAPPED_GENE %in% matched_genes, ]
-      sorted_genes <- gene_pvals[order(gene_pvals$P_VALUE), "MAPPED_GENE"]
-      
-      # Convert sorted_genes to a vector of gene names
-      sorted_genes <- sorted_genes$MAPPED_GENE
-
-      # Keep only the top 3 genes with the lowest p-values
-      df$Genes[[i]] <- sorted_genes[1:min(3, length(sorted_genes))]
-      
-    } else {
-      # If no genes are in important_genes, keep the first 3 genes from df
-      df$Genes[[i]] <- df$Genes[[i]][1:3]
-    }
+  } else if (length(matched_genes) <= 3) {
+    # 1 to 3 matched genes: keep them all
+    df$Genes[[i]] <- matched_genes
     
+  } else {
+    # More than 3 matched genes: keep the first 3
+    df$Genes[[i]] <- matched_genes[1:3]
   }
+  
 }
+
+
 
 
   df$Genes <- as.character(df$Genes)
@@ -167,30 +192,56 @@ for(i in c(1:nrow(df_manhattan))) {
 }  
 
 
+# for (i in 1:nrow(df_manhattan)) {
+#   # Filter genes from df that are in important_genes
+#   matched_genes <- df_manhattan$symbol[[i]][df_manhattan$symbol[[i]] %in% important_genes$MAPPED_GENE]
+
+#   if (length(df_manhattan$symbol[[i]]) > 3) {
+    
+#     if (length(matched_genes) > 0) {
+#       # Get the p-values for the matched genes and sort by P_VALUE
+#       gene_pvals <- important_genes[important_genes$MAPPED_GENE %in% matched_genes, ]
+#       sorted_genes <- gene_pvals[order(gene_pvals$P_VALUE), "MAPPED_GENE"]
+      
+#       # Convert sorted_genes to a vector of gene names
+#       sorted_genes <- sorted_genes$MAPPED_GENE
+
+#       # Keep only the top 3 genes with the lowest p-values
+#       df_manhattan$symbol[[i]] <- sorted_genes[1:min(3, length(sorted_genes))]
+      
+#     } else {
+#       # If no genes are in important_genes, keep the first 3 genes from df
+#       df_manhattan$symbol[[i]] <- df_manhattan$symbol[[i]][1:3]
+#     }
+    
+#   }
+# }
+
 for (i in 1:nrow(df_manhattan)) {
-  # Filter genes from df that are in important_genes
+  
+  # 1. Remove NA values from the gene list
+  df_manhattan$symbol[[i]] <- df_manhattan$symbol[[i]][!is.na(df_manhattan$symbol[[i]])]
+  
+  # 2. Identify genes that also appear in 'important_genes'
   matched_genes <- df_manhattan$symbol[[i]][df_manhattan$symbol[[i]] %in% important_genes$MAPPED_GENE]
-
-  if (length(df_manhattan$symbol[[i]]) > 3) {
+  
+  # 3. Subset logic
+  if (length(matched_genes) == 0) {
+    # No matched genes: keep up to the first 3
+    df_manhattan$symbol[[i]] <- df_manhattan$symbol[[i]][1:min(3, length(df_manhattan$symbol[[i]]))]
     
-    if (length(matched_genes) > 0) {
-      # Get the p-values for the matched genes and sort by P_VALUE
-      gene_pvals <- important_genes[important_genes$MAPPED_GENE %in% matched_genes, ]
-      sorted_genes <- gene_pvals[order(gene_pvals$P_VALUE), "MAPPED_GENE"]
-      
-      # Convert sorted_genes to a vector of gene names
-      sorted_genes <- sorted_genes$MAPPED_GENE
-
-      # Keep only the top 3 genes with the lowest p-values
-      df_manhattan$symbol[[i]] <- sorted_genes[1:min(3, length(sorted_genes))]
-      
-    } else {
-      # If no genes are in important_genes, keep the first 3 genes from df
-      df_manhattan$symbol[[i]] <- df_manhattan$symbol[[i]][1:3]
-    }
+  } else if (length(matched_genes) <= 3) {
+    # 1 to 3 matched genes: keep them all
+    df_manhattan$symbol[[i]] <- matched_genes
     
+  } else {
+    # More than 3 matched genes: keep the first 3
+    df_manhattan$symbol[[i]] <- matched_genes[1:3]
   }
+  
 }
+
+
 
 
 df_manhattan$symbol <- as.character(df_manhattan$symbol)
@@ -230,6 +281,7 @@ p <- ggplot() +
   # Adjust Y axis limits
   scale_y_continuous(expand = c(0, 0)) +
   ylim(min(df_manhattan$variance) - 0.00000003, max(df_manhattan$variance) + 0.00000003) +
+  # ylim(min(df_manhattan$variance) * 0.9, max(df_manhattan$variance) * 1.5)  # Scale both min/max
   # Apply theme settings
   theme_bw() +
   theme(

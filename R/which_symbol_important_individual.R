@@ -3,8 +3,9 @@ source("./R/individual_allele_info_generation.R")
 source("./R/snpid_generation.R")
 source("./R/jsonfile_generation.R")
 
-which_symbol_is_important_individual <- function(person, test.file, snp, full_PRS, PRS_info, annotated_info, important_genes,output.file) {
-  gene_level <- gene_manhattan_plot(person, full_PRS, PRS_info, annotated_info, important_genes)
+which_symbol_is_important_individual <- function(person, test.file, snp, full_PRS, PRS_info, annotated_info ,output.file) {
+  print(test.file)
+  gene_level <- gene_manhattan_plot(person, full_PRS, PRS_info, annotated_info)
   temp <- gene_level[[2]]
   temp$Gene <- as.character(temp$Gene)
 

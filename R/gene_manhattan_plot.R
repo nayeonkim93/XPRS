@@ -1,4 +1,4 @@
-gene_manhattan_plot <- function(person, full_PRS, PRS_info, annotated_info, important_genes) {
+gene_manhattan_plot <- function(person, full_PRS, PRS_info, annotated_info) {
   '%notin%' <- Negate('%in%')
   
  
@@ -6,17 +6,18 @@ gene_manhattan_plot <- function(person, full_PRS, PRS_info, annotated_info, impo
   if (!is.data.table(PRS_info)) setDT(PRS_info)
   if (!is.data.table(annotated_info)) setDT(annotated_info)
   
-  
+  print(person)
   PRS_info$Gene <- annotated_info$symbol
   annotated_info$attributed_value <- PRS_info[[person]]
+
   df <- annotated_info[order(annotated_info$attributed_value, decreasing = T),]
   # Step 1: Clean the symbol in df by removing trailing * but leave the original symbol intact
-  df$clean_symbol <- gsub("\\*+$", "", df$symbol)  # Remove trailing * from df$symbol
-  # Step 2: Merge df with important_genes on the cleaned df$symbol and important_genes$MAPPED_GENE
-  df <- merge(df, important_genes[, c("MAPPED_GENE", "P_VALUE")], 
-              by.x = "clean_symbol", by.y = "MAPPED_GENE", all.x = TRUE)
-  # Step 3: Sort first by attributed_value and then by P_VALUE
-  df <- df[order(-df$attributed_value, df$P_VALUE), ]
+  # df$clean_symbol <- gsub("\\*+$", "", df$symbol)  # Remove trailing * from df$symbol
+  # # Step 2: Merge df with important_genes on the cleaned df$symbol and important_genes$MAPPED_GENE
+  # df <- merge(df, important_genes[, c("MAPPED_GENE")], 
+  #             by.x = "clean_symbol", by.y = "MAPPED_GENE", all.x = TRUE)
+  # # Step 3: Sort first by attributed_value and then by P_VALUE
+  df <- df[order(-df$attributed_value), ]
   # df_filtered <- df[!is.na(df$P_VALUE),]
   df_filtered <- df[df$within_region_rank_by_variance == 1, ]
   df_filtered <- df_filtered %>%
@@ -62,6 +63,9 @@ gene_manhattan_plot <- function(person, full_PRS, PRS_info, annotated_info, impo
     scale_x_continuous(label = axisdf$chr, breaks = axisdf$center) +
     scale_y_continuous(expand = c(0, 0)) +
     ylim(min(df_manhattan$attributed_value) - 0.0003, max(df_manhattan$attributed_value) +0.0003) +
+    # ylim(min(df_manhattan$attributed_value) - 0.0001, max(df_manhattan$attributed_value) + 0.0001)
+
+
     theme_bw() +
     theme(
       legend.position = "none",
@@ -70,6 +74,7 @@ gene_manhattan_plot <- function(person, full_PRS, PRS_info, annotated_info, impo
       panel.grid.minor.x = element_blank()
     ) +
     xlab("Chromosome") + ylab("Attributed Value of Gene")
+
 
   # Convert to plotly with custom tooltip for each type
   fig <- ggplotly(p, tooltip = "text")
