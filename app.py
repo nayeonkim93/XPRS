@@ -422,7 +422,7 @@ def run_already_done():
 #                 print(test_file)
 #                 print(iid)
 
-#                 which_symbol_is_important_individual(iid, test_file, snp, full_PRS, PRS_info, annotated_info, important_genes,'./static/data/snp_level_manhattan_plot.json')
+#                 which_symbol_is_important_individual(iid, test_file, snp, full_PRS, PRS_info, annotated_info,'./static/data/snp_level_manhattan_plot.json')
 #                 end_time <- Sys.time()
 #                 print(paste0("Time it takes for which_symbol_is_important_individual function is ", end_time - start_time, " seconds"))
 #                 sink()
@@ -473,7 +473,7 @@ def result():
                 print(test_file)
                 print(iid)
 
-                which_symbol_is_important_individual(iid, test_file, snp, full_PRS, PRS_info, annotated_info, important_genes, './static/data/snp_level_manhattan_plot.json')
+                which_symbol_is_important_individual(iid, test_file, snp, full_PRS, PRS_info, annotated_info,'./static/data/snp_level_manhattan_plot.json')
                 end_time <- Sys.time()
                 print(paste0("Time it takes for which_symbol_is_important_individual function is ", end_time - start_time, " seconds"))
                 sink()
@@ -840,7 +840,7 @@ def result_2():
                 saveRDS(list_of_objects, "./output/indi_data.RDS")
            
                 start_time <- Sys.time()
-                which_symbol_is_important_individual(iid, indi_file, snp, full_PRS, PRS_info, annotated_info, important_genes,'./static/data/snp_level_manhattan_plot.json')
+                which_symbol_is_important_individual(iid, indi_file, snp, full_PRS, PRS_info, annotated_info,'./static/data/snp_level_manhattan_plot.json')
                 end_time <- Sys.time()
                 print(paste0("Time it takes for post-processing for individual is ", end_time - start_time, " seconds"))
                 full_PRS <- full_PRS[-nrow(full_PRS), ]
