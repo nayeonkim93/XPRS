@@ -39,6 +39,7 @@ cd XPRS
 XPRS leverages PLINK for certain analyses. The PLINK executable is included in the repository. Before running PLINK, you need to grant execute permissions:
 ``` 
 chmod +x plink
+chmod +x start_rserve.sh
  ``` 
 ### 3. Install Python and R packages
 XPRS is built using both Python and R, and requires specific libraries for proper functionality. To install all required Python and R libraries, run the `install.sh` script. This script will install both the Python dependencies listed in the `requirements.txt` file and the R libraries using the provided `install_packages.R` script.
