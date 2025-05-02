@@ -128,39 +128,40 @@ map_snps_no_gwas <- function(snp, beta.file, annotation.file, cS2G.file, test.fi
   count <- 1
   system.time(for (c in 1:22){
     temp <- annotation_unique[annotation_unique$chr == c,]
-    print(paste("Regionizing chromosome", c))
-    m <- matrix(0, nrow= nrow(temp), ncol = nrow(temp))
-    for (i in c(1:nrow(temp))){
-      for (j in c(i:nrow(temp))){
-        m[i,j] <- intersect_func(temp$snps_included[i], temp$snps_included[j])
+    if (nrow(temp) > 0) {
+      print(paste("Regionizing chromosome", c))
+      m <- matrix(0, nrow= nrow(temp), ncol = nrow(temp))
+      for (i in c(1:nrow(temp))){
+        for (j in c(i:nrow(temp))){
+          m[i,j] <- intersect_func(temp$snps_included[i], temp$snps_included[j])
+        }
       }
-    }
-    
-    m[lower.tri(m)]<- t(m)[lower.tri(m)]
-    
-    ls_gene <- temp$symbol
-    
-    while (length(ls_gene) != 0){
-      # maximum number of snps assigned to a single gene
-      max_num <- max(temp[temp$symbol %in% ls_gene,]$snps_count)
-      # gene index where maximum number of snps 
-      num <- which(temp$snps_count == max_num)
-      # since it can have several gene has maximum number of snps go through loop
-      if (length(num >= 1)){
-        for (i in c(1:length(num))){
-          if (nrow(temp[which(m[num[i],] >= floor(max(max_num) *2/3)),][is.na(temp[which(m[num[i],] >= floor(max(max_num) *2/3)),]$region)== T,]) >= 1){
-            temp[which(m[num[i],] >= floor(max(max_num) *2/3)),][is.na(temp[which(m[num[i],] >= floor(max(max_num) *2/3)),]$region)== T,]$region <- count
-            ls_gene <-  ls_gene[ls_gene %notin% temp[which(m[num[i],] >= floor(max(max_num) *2/3)),]$symbol]
-            count <- count + 1
-            #print(count)
-            #print(length(ls_gene))
+      
+      m[lower.tri(m)]<- t(m)[lower.tri(m)]
+      
+      ls_gene <- temp$symbol
+      
+      while (length(ls_gene) != 0){
+        # maximum number of snps assigned to a single gene
+        max_num <- max(temp[temp$symbol %in% ls_gene,]$snps_count)
+        # gene index where maximum number of snps 
+        num <- which(temp$snps_count == max_num)
+        # since it can have several gene has maximum number of snps go through loop
+        if (length(num >= 1)){
+          for (i in c(1:length(num))){
+            if (nrow(temp[which(m[num[i],] >= floor(max(max_num) *2/3)),][is.na(temp[which(m[num[i],] >= floor(max(max_num) *2/3)),]$region)== T,]) >= 1){
+              temp[which(m[num[i],] >= floor(max(max_num) *2/3)),][is.na(temp[which(m[num[i],] >= floor(max(max_num) *2/3)),]$region)== T,]$region <- count
+              ls_gene <-  ls_gene[ls_gene %notin% temp[which(m[num[i],] >= floor(max(max_num) *2/3)),]$symbol]
+              count <- count + 1
+              #print(count)
+              #print(length(ls_gene))
+            }
           }
         }
       }
-    }
-    
-    final <- rbind(final, temp)
-  } )
+      
+      final <- rbind(final, temp)
+  } })
   
   print("Done with 'case 2: partially overlapped genes' regionizing")
   
