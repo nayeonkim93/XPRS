@@ -63,16 +63,16 @@ h2_cal_cut <- function(test.file, beta.file, cut_off){
     final_dt$h2 <- NA
     final_dt$h2 <- (final_dt$beta)^2*(final_dt$MAF)*(1-final_dt$MAF)
 
-    if (nrow(final_dt) > 100000){
-        final_dt <- final_dt[order(-final_dt$h2),]
+   final <- match_alleles("./data/temp_test_no_dup", final_dt)
+
+    if (nrow(final) > 100000){
+        final <- final[order(-final$h2),]
         number <- floor(cut_off* nrow(snp))
         number <- min(number, 100000) 
-        final_dt <- final_dt[c(1:number),]
-        final_dt <- final_dt[order(chr, snpid),]
+        final <- final[c(1:number),]
+        final <- final[order(chr, snpid),]
     }
 
-
-    final <- match_alleles("./data/temp_test_no_dup", final_dt)
     # after cut_off make new_test file
     write.table(final$snpid, file = "./data/snp_cut_off.txt", row.names = F, col.names=F, quote = F)
     cmd = paste0("./plink --bfile ./data/temp_test_no_dup --extract ./data/snp_cut_off.txt --make-bed --out ./data/new_test")
