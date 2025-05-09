@@ -11,10 +11,6 @@ For more information, see our manuscript
 
 Originally, SNPs were mapped to genes using **RefGene (GRCh38)** from the [UCSC Genome Browser](https://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/), as described in the supplementary materials of our manuscript. However, due to the broader adoption of **GRCh37** in public PRS resources (e.g., PGS Catalog) and GWAS summary statistics, we have migrated to using **GRCh37-based RefGene annotation**, available at:[https://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/](https://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/)
 
-This change ensures better compatibility with widely used PRS scoring files and enables more consistent SNP-to-gene mapping across cohorts and methods.
-
-If you have existing analyses based on GRCh38, we recommend using liftover tools (e.g., UCSC liftOver or CrossMap) to harmonize your genomic coordinates.
-
 ## Access the XPRS Web Service
 
 You can explore XPRS via our cloud-based web service:  
