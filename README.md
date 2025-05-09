@@ -5,7 +5,7 @@ For more information, see our manuscript
 
 [XPRS: A Tool for Interpretable and Explainable Polygenic Risk Score](https://doi.org/10.1093/bioinformatics/btaf143)
 
-### 📌 Genome Build Update
+## 📌 Genome Build Update
 
 > 🛠️ **Update**: As of **May 2025**, XPRS has been updated to use the **GRCh37 (hg19)** reference genome for gene annotation by default.
 
