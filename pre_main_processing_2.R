@@ -14,7 +14,7 @@ option_list = list(
               help="full path to PRS.scroing.file", metavar="file"),
   make_option(c("-g", "--GWAS.file"), type="character", default=NULL, 
               help="full path to sumstat.file", metavar="file"),
-  make_option(c("-a", "--annotation.file"), type="character", default="./data/ucsc_hg38.txt", 
+  make_option(c("-a", "--annotation.file"), type="character", default="./data/ucsc_hg19.txt", 
                help="full path to annotation.file", metavar="file"),
   make_option(c("-c", "--cS2G.file"), type="character", default="./data/cS2G_annotation.txt", 
                help="full path to cS2G.file", metavar="file"),
