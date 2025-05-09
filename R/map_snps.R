@@ -98,8 +98,10 @@ map_snps <- function(snp, beta.file, annotation.file, cS2G.file, gwas.file, wind
     }
   }
   
-  ls <- unlist(lapply(1:nrow(annotation_unique), function(i) remove_character0(i)))
-  annotation_unique[ls,]$snps_sharing_genes <- NA
+  # ls <- unlist(lapply(1:nrow(annotation_unique), function(i) remove_character0(i)))
+  # annotation_unique[ls,]$snps_sharing_genes <- NA
+  ls <- as.integer(unlist(lapply(1:nrow(annotation_unique), function(i) remove_character0(i))))
+  annotation_unique[ls, "snps_sharing_genes"] <- NA
   
   print("Done with 'case 1: fully overlapped genes' grouping")
   
