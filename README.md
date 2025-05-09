@@ -5,13 +5,11 @@ For more information, see our manuscript
 
 [XPRS: A Tool for Interpretable and Explainable Polygenic Risk Score](https://doi.org/10.1093/bioinformatics/btaf143)
 
-# 📌 Genome Build Update
+### 📌 Genome Build Update
 
 > 🛠️ **Update**: As of **May 2025**, XPRS has been updated to use the **GRCh37 (hg19)** reference genome for gene annotation by default.
 
-Originally, SNPs were mapped to genes using **RefGene (GRCh38)** from the [UCSC Genome Browser](https://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/), as described in the supplementary materials of our manuscript. However, due to the broader adoption of **GRCh37** in public PRS resources (e.g., PGS Catalog) and GWAS summary statistics, we have migrated to using **GRCh37-based RefGene annotation**, available at:
-
-👉 [https://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/](https://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/)
+Originally, SNPs were mapped to genes using **RefGene (GRCh38)** from the [UCSC Genome Browser](https://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/), as described in the supplementary materials of our manuscript. However, due to the broader adoption of **GRCh37** in public PRS resources (e.g., PGS Catalog) and GWAS summary statistics, we have migrated to using **GRCh37-based RefGene annotation**, available at:[https://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/](https://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/)
 
 This change ensures better compatibility with widely used PRS scoring files and enables more consistent SNP-to-gene mapping across cohorts and methods.
 
